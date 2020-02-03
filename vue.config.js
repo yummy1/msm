@@ -1,6 +1,6 @@
 module.exports = {
     devServer: {
-        port: 8001,
+        port: 8888,
         host: 'localhost',
         https: false,
         open: true,//启动服务时自动打开浏览器访问
