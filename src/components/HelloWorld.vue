@@ -97,7 +97,6 @@
 </template>
 
 <script>
-<<<<<<< HEAD
 
   import testApi from '@/api/test'
 export default {
@@ -117,9 +116,7 @@ export default {
       })
     }
   },
-=======
-export default {
->>>>>>> 133b9f29cec75c93a8a63757660b809ff0d1c94c
+
   name: "HelloWorld",
   props: {
     msg: String
