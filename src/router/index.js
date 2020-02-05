@@ -26,6 +26,11 @@ const routes = [
         component: Home,
         meta: {title: '首页'}
       },
+      // {
+      //   path: "/member",
+      //   component: Member,
+      //   meta: {title: '会员管理'}
+      // },
     ]
   },
   {

@@ -16,3 +16,10 @@ export function getUserInfo(token) {
     method:'get'
   })
 }
+
+export function logout() {
+  return request({
+    url: 'user/logout',
+    method: 'post'
+  })
+}

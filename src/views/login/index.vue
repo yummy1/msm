@@ -49,7 +49,7 @@
                   console.log(user,user.flag,user.message)
                   if (user.flag){
                     localStorage.setItem('msm-token',res.data.token)
-                    localStorage.setItem('msm-userInfo',JSON.stringify(user.data))
+                    localStorage.setItem('msm-user',JSON.stringify(user.data))
                     this.$router.push('/')
                   }else{
                     this.$message({

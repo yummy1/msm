@@ -17,10 +17,33 @@
     </div>
 </template>
 <script>
+import {logout} from '@/api/login'
+
     export default {
       methods: {
         handleCommand(command){
-            this.$message(`点击了${command}`)
+          switch (command) {
+            case 'a':
+            {
+                this.$message('修改密码')
+            }
+              break;
+            case 'b':
+              {
+                logout().then(response => {
+                  const resp = response.data
+                  console.log(resp)
+                  if (resp.flag){
+                    localStorage.removeItem('msm-user')
+                    localStorage.removeItem('msm-token')
+                    this.$router.push('/login')
+                  }else {
+                    this.$message('退出登录失败')
+                  }
+                })
+              }
+              break;
+            }
         }
       }
     }
