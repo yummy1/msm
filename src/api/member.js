@@ -6,5 +6,14 @@ export default {
       url: 'member/list',
       method: 'get'
     })
+  },
+  searchList(currentPage,size,searchMap){
+    return request({
+      url: `member/list/search/${currentPage}/${size}`,
+      method: 'post',
+      data: {
+        searchMap
+      }
+    })
   }
 }
