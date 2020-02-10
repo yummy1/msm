@@ -27,6 +27,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">查询</el-button>
+          <el-button type="danger" @click="handleAdd">新增</el-button>
           <el-button @click="resetForm('searchMap')">重置</el-button>
         </el-form-item>
 </el-form>
@@ -62,7 +63,7 @@
         </el-table-column>
       </el-table>
   <!-- 分页 -->
-    <el-pagination
+      <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="currentPage"
@@ -71,6 +72,56 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="total">
     </el-pagination>
+<!-- 新增会员弹窗-->
+      <el-dialog title="新增会员" :visible.sync="dialogFormVisible" style="width:950px">
+        <el-form
+                ref="addForm"
+                :rules="rules"
+                label-width="100px"
+                label-position="right"
+                style="width: 400px"
+                :model="pojo">
+          <el-form-item prop="cardNum" label="会员卡号">
+            <el-input v-model="pojo.cardNum"></el-input>
+          </el-form-item>
+          <el-form-item prop="name" label="会员姓名">
+            <el-input v-model="pojo.name"></el-input>
+          </el-form-item>
+          <el-form-item prop="birthday" label="会员生日">
+            <el-date-picker
+                    value-format="yyyy-MM-dd"
+                    v-model="pojo.birthday"
+                    type="date"
+                    placeholder="请点击选择">
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item label="手机号码" prop="phone">
+            <el-input v-model="pojo.phone"></el-input>
+          </el-form-item>
+          <el-form-item label="开卡金额" prop="money">
+            <el-input v-model="pojo.money"></el-input>
+          </el-form-item>
+          <el-form-item label="会员积分" prop="integral">
+            <el-input v-model="pojo.integral"></el-input>
+          </el-form-item>
+          <el-form-item prop="payType" label="支付方式">
+            <el-select placeholder="支付类型" v-model="pojo.payType">
+              <el-option v-for="option in payTypeOptions"
+                         :key="option.type"
+                         :label="option.name"
+                         :value="option.type"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="会员地址" prop="address">
+            <el-input type="textarea" v-model="pojo.address"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="add('addForm')">确 定</el-button>
+        </div>
+      </el-dialog>
   </div>
 </template>
 
@@ -95,13 +146,30 @@
           payType: '',
           birthday: ''
         },
-        payTypeOptions
+        payTypeOptions,
+        pojo: {
+          cardNum: '',
+          name: '',
+          birthday: '',
+          phone: '',
+          money: 0,
+          integral: 0,
+          payType: '',
+          address: ''
+        },
+        dialogFormVisible: false,
+        rules: {
+          cardNum:[{required: true, message: '卡号不能为空', trigger: 'blur'}],
+          name:[{required: true, message: '姓名不能为空', trigger: 'blur'}],
+          payType:[{required: true, message: '支付方式不能为空', trigger: 'blur'}]
+        }
       }
     },
     created() {
       this.fetchData()
     },
     methods:{
+      //请求数据
       fetchData(){
             memberApi.searchList(this.currentPage,this.size,this.searchMap).then(response => {
               const resp = response.data
@@ -110,27 +178,66 @@
               this.total = resp.data.total
             })
       },
+      //编辑
       handleEdit(id){
         console.log(id)
       },
+      //删除
       handleDelete(id){
         console.log(id)
       },
+      //每页数量改变
       handleSizeChange(val) {
         this.size = val
         this.fetchData()
         console.log(`每页 ${val} 条`);
       },
+      //当前页数改变
       handleCurrentChange(val) {
         this.currentPage = val
         this.fetchData()
         console.log(`当前页: ${val}`);
       },
+      //搜索
       onSubmit(){
         this.fetchData()
       },
+      //重置
       resetForm(formName) {
         this.$refs[formName].resetFields();
+      },
+      //新增会员
+      add(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid){
+            memberApi.add(this.pojo).then(response => {
+              const resp = response.data
+              console.log(resp)
+              if(resp.flag){
+                //新增成功,刷新列表数据
+                this.fetchData()
+                this.dialogFormVisible = false
+              }else{
+                this.$message({
+                  message: resp.message,
+                  type: 'warning'
+                })
+              }
+            })
+          }else {
+            console.log('验证失败')
+            return false
+          }
+        })
+      },
+      //新增弹窗
+      handleAdd(){
+        this.dialogFormVisible = true
+        //$nextTick异步方法
+        this.$nextTick(() => {
+          this.$refs['addForm'].resetFields()
+        })
+
       }
     },
     filters: {

@@ -7,12 +7,21 @@ export default {
       method: 'get'
     })
   },
-  searchList(currentPage,size,searchMap){
+  searchList(currentPage,size,searchMap) {
     return request({
       url: `member/list/search/${currentPage}/${size}`,
       method: 'post',
       data: {
         searchMap
+      }
+    })
+  },
+  add(pojo) {
+    return request({
+      url: '/member',
+      method: 'post',
+      data: {
+        pojo
       }
     })
   }
