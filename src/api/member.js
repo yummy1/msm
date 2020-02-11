@@ -43,5 +43,12 @@ export default {
       url: `/member/${id}`,
       method: 'get'
     })
+  },
+  //根据id删除
+  deleteById(id) {
+    return request({
+      url: `/member/${id}`,
+      method: 'delete'
+    })
   }
 }

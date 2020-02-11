@@ -266,6 +266,24 @@
       //删除
       handleDelete(id){
         console.log(id)
+        this.$confirm('是否删除该会员?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          memberApi.deleteById(id).then(response => {
+            const resp = response.data
+            this.$message({
+              type: resp.flag ? 'success': 'error',
+              message: resp.flag ? '删除成功!': '删除失败'
+            });
+            if(resp.flag){
+              this.fetchData()
+            }
+          })
+        }).catch(() => {
+
+        });
       },
 
     },
