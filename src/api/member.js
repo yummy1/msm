@@ -7,6 +7,7 @@ export default {
       method: 'get'
     })
   },
+  //查询
   searchList(currentPage,size,searchMap) {
     return request({
       url: `member/list/search/${currentPage}/${size}`,
@@ -16,6 +17,7 @@ export default {
       }
     })
   },
+  //新增
   add(pojo) {
     return request({
       url: '/member',
@@ -23,6 +25,23 @@ export default {
       data: {
         pojo
       }
+    })
+  },
+  //编辑
+  edit(pojo) {
+    return request({
+      url: `/member/${pojo.id}`,
+      method: 'put',
+      data: {
+        pojo
+      }
+    })
+  },
+  //根据id查询
+  searchById(id) {
+    return request({
+      url: `/member/${id}`,
+      method: 'get'
     })
   }
 }

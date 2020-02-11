@@ -119,7 +119,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="add('addForm')">确 定</el-button>
+          <el-button type="primary" @click="pojo.id === null ? add('addForm') : edit('addForm')">确 定</el-button>
         </div>
       </el-dialog>
   </div>
@@ -148,6 +148,7 @@
         },
         payTypeOptions,
         pojo: {
+          id: null,
           cardNum: '',
           name: '',
           birthday: '',
@@ -178,14 +179,6 @@
               this.total = resp.data.total
             })
       },
-      //编辑
-      handleEdit(id){
-        console.log(id)
-      },
-      //删除
-      handleDelete(id){
-        console.log(id)
-      },
       //每页数量改变
       handleSizeChange(val) {
         this.size = val
@@ -208,6 +201,7 @@
       },
       //新增会员
       add(formName) {
+        console.log('新增结束')
         this.$refs[formName].validate((valid) => {
           if (valid){
             memberApi.add(this.pojo).then(response => {
@@ -237,8 +231,43 @@
         this.$nextTick(() => {
           this.$refs['addForm'].resetFields()
         })
+      },
+      //编辑弹窗
+      handleEdit(id){
+        console.log(id)
+        //先清空,并弹出编辑窗口
+        this.handleAdd()
+        memberApi.searchById(id).then(response => {
+          console.log(response.data)
+          const resp = response.data
+          if (resp.flag){
+            this.pojo = resp.data
+          }
+        })
+      },
+      edit(formName) {
+        console.log('编辑结束')
+        this.$refs[formName].validate((valid) => {
+          if (valid){
+            memberApi.edit(this.pojo).then(response => {
+              console.log(response.data)
+              const resp = response.data
+              if(resp.flag){
+                this.fetchData()
+                this.dialogFormVisible = false
+              }
+            })
+          }else{
+            console.log('验证失败')
+            return false
+          }
+        })
+      },
+      //删除
+      handleDelete(id){
+        console.log(id)
+      },
 
-      }
     },
     filters: {
       payTypeFilter(type){
