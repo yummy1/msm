@@ -65,16 +65,16 @@
                 <el-form-item label="联系人" prop="linkman">
                     <el-input v-model="pojo.linkman" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="手机号">
+                <el-form-item label="手机号" prop="mobile">
                     <el-input v-model="pojo.mobile" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="备注">
+                <el-form-item label="备注" prop="remark">
                     <el-input type="textarea" v-model="pojo.remark" autocomplete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="add">确 定</el-button>
+                <el-button type="primary" @click="pojo.id === null ? add('addForm') : edit('addForm')">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -134,30 +134,79 @@
           this.$refs['addForm'].resetFields()
         })
       },
-      add(){
-        supplierApi.add(this.pojo).then(response => {
-          console.log(response.data)
-          const resp = response.data
-          if (resp.flag){
-            this.dialogFormVisible = false
-            this.fetchData()
+      add(formName){
+        this.$refs[formName].validate(valid => {
+          if (valid){
+            supplierApi.add(this.pojo).then(response => {
+              const resp = response.data
+              if (resp.flag){
+                this.dialogFormVisible = false
+                this.fetchData()
+              }else{
+                this.$message({
+                  type: 'warning',
+                  message: resp.message
+                })
+              }
+            })
+          }else{
+            return false
           }
         })
       },
       //编辑
       handleEdit(id){
-        handleAdd()
+        this.handleAdd()
         supplierApi.getById(id).then(response => {
           const resp = response.data
-          console.log(resp)
           if(resp.flag){
             this.pojo = resp.data
           }
         })
       },
+      edit(formName){
+        this.$refs[formName].validate(valid => {
+          if (valid){
+            supplierApi.edit(this.pojo).then(response => {
+              const resp = response.data
+              if (resp.flag){
+                this.dialogFormVisible = false
+                this.fetchData()
+              }else{
+                this.$message({
+                  type: 'warning',
+                  message: resp.message
+                })
+              }
+            })
+          }else{
+            return false
+          }
+        })
+      },
       //删除
       handleDelete(id){
-
+        this.$confirm('您确定要删除?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          supplierApi.delete(id).then(response => {
+            const resp = response.data
+            if(resp.flag){
+              this.fetchData()
+            }
+            this.$message({
+              type: resp.flag ? 'success':'warning',
+              message: resp.message
+            });
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
       },
       handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
