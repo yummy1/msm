@@ -62,7 +62,7 @@
           </template>
         </el-table-column>
       </el-table>
-  <!-- 分页 -->
+      <!-- 分页 -->
       <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
@@ -72,7 +72,7 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="total">
     </el-pagination>
-<!-- 新增会员弹窗-->
+      <!-- 新增会员弹窗-->
       <el-dialog title="新增会员" :visible.sync="dialogFormVisible" style="width:950px">
         <el-form
                 ref="addForm"
