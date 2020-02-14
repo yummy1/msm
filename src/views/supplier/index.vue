@@ -5,31 +5,33 @@
             <el-form-item prop="name">
                 <el-input v-model="searchMap.name" placeholder="供应商名称"></el-input>
             </el-form-item>
-            <el-form-item prop="linkman">
+            <el-form-item prop="linkman" v-if="!isDialog">
                 <el-input v-model="searchMap.linkman" placeholder="联系人"></el-input>
             </el-form-item>
-            <el-form-item prop="moblie">
+            <el-form-item prop="moblie" v-if="!isDialog">
                 <el-input v-model="searchMap.moblie" placeholder="手机号"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" icon="el-icon-search" @click="onSubmit">查询</el-button>
-                <el-button type="danger" icon="el-icon-edit" @click="handleAdd">新增</el-button>
-                <el-button @click="resetForm('searchForm')">重置</el-button>
+                <el-button v-if="!isDialog" type="danger" icon="el-icon-edit" @click="handleAdd">新增</el-button>
+                <el-button v-if="!isDialog" @click="resetForm('searchForm')">重置</el-button>
             </el-form-item>
         </el-form>
 <!--        供应商列表-->
         <el-table
+                highlight-current-row
+                @current-change="clickRow"
                 :data="list"
                 border
                 height="380"
                 v-loading="loading"
                 style="width: 100%">
             <el-table-column type="index" width="80" label="序号"></el-table-column>
-            <el-table-column prop="name" width="150" label="供应商名称"></el-table-column>
+            <el-table-column prop="name" label="供应商名称"></el-table-column>
             <el-table-column prop="linkman" width="80" label="联系人"></el-table-column>
-            <el-table-column prop="mobile" width="130" label="手机号码"></el-table-column>
-            <el-table-column prop="remark" label="备注"></el-table-column>
-            <el-table-column label="操作">
+            <el-table-column v-if="!isDialog" prop="mobile" width="130" label="手机号码"></el-table-column>
+            <el-table-column v-if="!isDialog" prop="remark" label="备注"></el-table-column>
+            <el-table-column v-if="!isDialog" label="操作">
                 <template slot-scope="scope">
                     <el-button
                             size="mini"
@@ -48,7 +50,7 @@
                 :current-page="currentPage"
                 :page-sizes="[10, 20, 30, 40]"
                 :page-size="10"
-                layout="total, sizes, prev, pager, next, jumper"
+                :layout="isDialog ? 'prev, pager, next' : 'total, sizes, prev, pager, next, jumper'"
                 :total="total">
         </el-pagination>
 <!--        新增供应商弹窗-->
@@ -85,6 +87,9 @@
 
   import supplierApi from '@/api/supplier'
   export default {
+    props: {
+      isDialog: Boolean
+    },
     data(){
       return {
         list: [],
@@ -225,8 +230,12 @@
       //重置
       resetForm(formName){
         this.$refs[formName].resetFields()
+      },
+      //单选
+      clickRow(val){
+        console.log(val)
+        this.$emit('supplier-selected',val)
       }
-
     }
   }
 </script>

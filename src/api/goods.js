@@ -11,8 +11,28 @@ export default {
   add(pojo){
     return request({
       url: '/goods',
+      method: 'post',
+      data: pojo
+    })
+  },
+  getById(id){
+    return request({
+      url: `/goods/${id}`,
+      method: 'get'
+    })
+  },
+  edit(pojo){
+    return request({
+      url: `/goods/${id}`,
       method: 'put',
       data: pojo
     })
-  }
+  },
+  delete(id){
+    return request({
+      url: `/goods/${id}`,
+      method: 'delete'
+    })
+  },
+
 }

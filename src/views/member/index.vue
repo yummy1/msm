@@ -251,6 +251,7 @@
           }
         })
       },
+      //编辑
       edit(formName) {
         console.log('编辑结束')
         this.$refs[formName].validate((valid) => {
