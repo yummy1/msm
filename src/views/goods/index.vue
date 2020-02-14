@@ -1,5 +1,6 @@
 <template>
     <div>
+<!--        列表展示-->
         <el-table
                 :data="list"
                 border
@@ -25,6 +26,16 @@
                 </template>
             </el-table-column>
         </el-table>
+<!--        分页-->
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-sizes="[10, 20, 30, 40]"
+                :page-size="10"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+        </el-pagination>
     </div>
 </template>
 
@@ -64,6 +75,16 @@
       },
       handleDelete(id){
 
+      },
+      handleSizeChange(val) {
+        console.log(`每页 ${val} 条`);
+        this.pageSize = val
+        this.fetchData()
+      },
+      handleCurrentChange(val) {
+        console.log(`当前页: ${val}`);
+        this.currentPage = val
+        this.fetchData()
       }
     }
   }
