@@ -102,7 +102,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="add('addForm')">确 定</el-button>
+                <el-button type="primary" @click="pojo.id === null ? add('addForm') : edit('addForm')">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -168,11 +168,55 @@
       },
       //编辑
       handleEdit(id){
-
+        this.handleAdd()
+        goodsApi.getById(id).then(response => {
+          const resp = response.data
+          if(resp.flag){
+            this.pojo = resp.data
+          }else{
+            this.$message({
+              message:resp.message,
+              type: "warning"
+            })
+          }
+        })
+      },
+      edit(formName){
+        goodsApi.edit(this.pojo).then(response => {
+          if (response.data.flag){
+            this.dialogFormVisible = false
+            this.fetchData()
+          }else{
+            this.$message({
+              message:resp.message,
+              type: "warning"
+            })
+          }
+        })
       },
       //删除
       handleDelete(id){
-
+        this.$confirm('确认删除改件商品?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          goodsApi.delete(id).then(response => {
+            const resp = response.data
+            if (resp.flag){
+              this.fetchData()
+            }
+            this.$message({
+              message: resp.message,
+              type:resp.flag ? "success" : "warning"
+            })
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        })
       },
       //每页数量改变
       handleSizeChange(val) {
