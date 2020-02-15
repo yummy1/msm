@@ -45,8 +45,10 @@ import passwordApi from '@/api/password'
             console.log(value)
             callback(new Error('请输入密码'));
           } else {
+            console.log('验证密码请求')
             passwordApi.checkPassword(this.user.id,value).then(response => {
               if(response.data.flag){
+                //验证通过
                 callback();
               }else{
                 callback(new Error(response.data.message));
@@ -64,7 +66,7 @@ import passwordApi from '@/api/password'
           }
         };
         return {
-          dialogFormVisible: true,
+          dialogFormVisible: false,
           user:JSON.parse(localStorage.getItem('msm-user')),
           ruleForm: {
             oldPass: '',
@@ -81,7 +83,7 @@ import passwordApi from '@/api/password'
             ],
             checkPass: [
               { required: true, message: '请再次输入密码', trigger: 'blur' },
-              { validator: validateCheckPass, trigger: 'blur' }
+              { validator: validateCheckPass, trigger: 'change' }
             ]
           }
         }
@@ -124,9 +126,11 @@ import passwordApi from '@/api/password'
         },
         //提交新密码
         submitForm(FormName){
+          console.log('修改密码')
           this.$refs[FormName].validate(valid => {
             if (valid){
-              passwordApi.checkPassword(this.user.id, this.ruleForm.checkPass).then(response => {
+              console.log('修改密码请求')
+              passwordApi.changePassword(this.user.id, this.ruleForm.checkPass).then(response => {
                 const resp = response.data
                 this.$message({
                   message: resp.message,
@@ -138,6 +142,7 @@ import passwordApi from '@/api/password'
                 }
               })
             }else{
+              console.log('验证不通过')
               return false
             }
           })
