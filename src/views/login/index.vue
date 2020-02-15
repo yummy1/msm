@@ -1,6 +1,6 @@
 <template>
     <div class="login-container">
-        <el-form class="login-form" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px">
+        <el-form class="login-form" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="60px">
             <h2 class="login-tittle">会员管理系统</h2>
             <el-form-item label="账号" prop="name">
                 <el-input v-model="ruleForm.name"></el-input>
@@ -76,9 +76,9 @@
 </script>
 <style>
     .login-form {
-        width: 350px;
+        width: 330px;
         margin: 160px auto;
-        padding: 28px;
+        padding: 40px;
         background: rgba(255,255,255,0.8);
         border-radius: 20px;
     }

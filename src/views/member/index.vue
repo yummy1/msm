@@ -36,7 +36,6 @@
       :data="list"
       height="380"
       border
-      v-loading="loading"
       style="width: 100%">
         <el-table-column type="index" label="序号" width="60"></el-table-column>
         <el-table-column prop="cardNum" label="会员卡号"></el-table-column>
@@ -141,7 +140,6 @@
         currentPage: 1,
         total: 0,
         size: 10,
-        loading: true,
         searchMap: {
           cardNum: '',
           user: '',
@@ -174,11 +172,9 @@
     methods:{
       //请求数据
       fetchData(){
-          this.loading = true
           memberApi.searchList(this.currentPage,this.size,this.searchMap).then(response => {
             const resp = response.data
             console.log(resp.data)
-            this.loading = false
             if(resp.flag){
               this.list = resp.data.rows
               this.total = resp.data.total

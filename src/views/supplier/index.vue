@@ -24,7 +24,6 @@
                 :data="list"
                 border
                 height="380"
-                v-loading="loading"
                 style="width: 100%">
             <el-table-column type="index" width="80" label="序号"></el-table-column>
             <el-table-column prop="name" label="供应商名称"></el-table-column>
@@ -96,7 +95,6 @@
         currentPage: 1,
         pageSize: 10,
         total: 0,
-        loading: true,
         searchMap: {
           name: '',
           linkman: '',
@@ -121,10 +119,8 @@
     },
     methods: {
       fetchData(){
-        this.loading = true
         supplierApi.searchList(this.currentPage, this.pageSize,this.searchMap).then(response => {
           const resp = response.data
-          this.loading = false
           if(resp.flag){
             this.list = resp.data.rows
             this.total = resp.data.total
