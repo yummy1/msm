@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Loading } from 'element-ui';
+import {Loading, Message} from 'element-ui';
 
 const loading = {
   loadingInstance : null,
@@ -35,9 +35,23 @@ request.interceptors.request.use(config => {
 /*相应拦截器*/
 request.interceptors.response.use(response => {
   loading.close()
+  const resp = response.data
+  if(resp.code !== 2000){
+    Message({
+      message: resp.message,
+      type: 'warning',
+      duration: 5 * 1000
+    })
+  }
   return response;
 },error => {
   loading.close()
+  console.log(error)
+  Message({
+    message: error.message,
+    type: 'warning',
+    duration: 5 * 1000
+  })
   return Promise.reject(error);
 })
 

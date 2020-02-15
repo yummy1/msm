@@ -27,7 +27,6 @@
                 :data="list"
                 border
                 height="360"
-                v-loading="loading"
                 style="width: 100%">
             <el-table-column type="index" label="序号" width="60"></el-table-column>
             <el-table-column prop="name" label="商品名称"></el-table-column>
@@ -140,7 +139,6 @@
         dialogSupplierVisible: false,
         dialogFormVisible: false,
         isEdit: false,
-        loading: false,
         rules: {
           name: [{ required: true, message: '请输入商品名称', trigger: 'blur' }],
           code: [{ required: true, message: '请输入商品编号', trigger: 'blur' }],
@@ -154,11 +152,9 @@
     methods: {
       //请求数据
       fetchData(){
-        this.loading = true
         goodsApi.searchList(this.currentPage, this.pageSize, this.searchMap).then(response => {
           const resp = response.data
           console.log(resp)
-          this.loading = false
           if(resp.flag){
             this.total = resp.data.total
             this.list = resp.data.rows
