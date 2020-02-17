@@ -21,7 +21,6 @@
   export default {
     data() {
       return {
-        name: "index",
         ruleForm: {
           name: '',
           password: ''
@@ -40,30 +39,16 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            login(this.name, this.password).then(response => {
-              const res = response.data
-              console.log(res,res.flag,res.message,res.data.token)
-              if (res.flag){
-                getUserInfo(res.data.token).then( response => {
-                  const user = response.data
-                  console.log(user,user.flag,user.message)
-                  if (user.flag){
-                    localStorage.setItem('msm-token',res.data.token)
-                    localStorage.setItem('msm-user',JSON.stringify(user.data))
-                    this.$router.push('/')
-                  }else{
-                    this.$message({
-                      message: user.message,
-                      type: 'warning'
-                    });
-                  }
-                })
-              }else{
-                this.$message({
-                  message: res.message,
-                  type: 'warning'
-                });
-              }
+            this.$store.dispatch('Login',this.ruleForm).then( response => {
+                console.log('login',response)
+                if (response.flag){
+                  this.$router.push('/')
+                }else {
+                  this.$message({
+                    message: res.message,
+                    type: 'warning'
+                  });
+                }
             })
           } else {
             console.log('error submit!!');

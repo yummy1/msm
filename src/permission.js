@@ -1,6 +1,7 @@
 
 import router from './router/index'
 import {getUserInfo} from './api/login'
+import store from '@/store'
 
 
 //全局前置守卫,拦截
@@ -11,25 +12,24 @@ router.beforeEach((to, from, next) => {
     next()
   }else {
     //不是的话,查看是否有token
-    const token = localStorage.getItem('msm-token')
+    const token = store.state.user.token
+    console.log('permission', token)
     if(token){
       //再看是否有用户信息
-      const userInfo = localStorage.getItem('msm-user')
+      const userInfo = store.state.user.user
       if(userInfo){
         //有的话,啥也不做
         next()
       }else {
         //没有的话获取用户信息
-        getUserInfo(token).then(response => {
-          const resp = response.data
-          if (resp) {
-            localStorage.setItem('msm-user', JSON.stringify(response.data))
+        store.dispatch('getUserInfo').then(response => {
+          console.log(response)
+          if (response.flag){
             next()
-          } else {
+          }else{
             //获取用户信息失败,去登录页
             next({path: '/login'})
           }
-
         })
       }
     }else {

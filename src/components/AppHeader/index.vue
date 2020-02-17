@@ -67,7 +67,7 @@ import passwordApi from '@/api/password'
         };
         return {
           dialogFormVisible: false,
-          user:JSON.parse(localStorage.getItem('msm-user')),
+          user: this.$store.state.user.user,
           ruleForm: {
             oldPass: '',
             pass: '',
@@ -105,15 +105,14 @@ import passwordApi from '@/api/password'
         },
         //退出登录
         handleLogout(){
-          logout().then(response => {
-            const resp = response.data
-            console.log(resp)
-            if (resp.flag){
-              localStorage.removeItem('msm-user')
-              localStorage.removeItem('msm-token')
+          this.$store.dispatch('Logout').then(response => {
+            if (response.flag){
               this.$router.push('/login')
             }else {
-              this.$message('退出登录失败')
+              this.$message({
+                message: '退出登录失败',
+                type: "error"
+              })
             }
           })
         },
